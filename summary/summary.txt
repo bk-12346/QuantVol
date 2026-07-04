@@ -1,0 +1,52 @@
+INGESTION
+Step 1: Define scope in configs/data_config.yaml
+
+Choose asset(s) — e.g., start with a single liquid index/ticker (S&P 500 via ^GSPC) before expanding to a basket
+Define date range — go back far enough to include multiple regimes (e.g., 2015–present captures 2018 vol spike, 2020 COVID crash, 2022 rate hikes)
+Define frequency — daily close-to-close is the standard starting point; intraday is a stretch goal, not needed for v1
+
+Step 2: Write the ingestion module (src/quantvol/data/ingest.py)
+
+Function to pull OHLCV data via yfinance for the configured ticker(s)/date range
+Save raw pull untouched to data/raw/ (this is what DVC will track)
+Basic sanity checks: no huge gaps, correct date range, no duplicate timestamps
+
+Step 3: Data cleaning (src/quantvol/data/)
+
+Handle missing days (holidays, exchange closures) — forward-fill vs. drop, decide explicitly
+Ensure sorted chronological index, no look-ahead from misaligned timestamps
+Save cleaned version to data/interim/
+
+Step 4: Compute realized volatility (src/quantvol/data/realized_vol.py)
+
+Compute log returns from close prices
+Compute realized volatility target — rolling standard deviation of returns (e.g., 21-day rolling window, annualized)
+Optionally compute alternative estimators for comparison/features later:
+
+Parkinson estimator (uses high-low range)
+Garman-Klass estimator (uses OHLC)
+
+
+Save to data/processed/ — this becomes your modeling target
+
+Step 5: Regime tagging (src/quantvol/features/regime_labels.py)
+
+Manually tag known historical regime windows (e.g., "2018 Q4 selloff," "2020 COVID crash," "2022 rate hikes," "calm periods") as a categorical column
+This isn't used for training — it's for later evaluation (checking model error per regime)
+
+Step 6: EDA notebook (notebooks/01_eda.ipynb)
+
+Plot price series and realized vol over time
+Visualize vol clustering (the classic "volatility clusters" pattern — justifies why this is a real ML problem, not noise)
+Distribution of returns (check fat tails — relevant for later evaluation choices)
+Sanity-check regime tags against known events
+
+Step 7: DVC tracking
+
+dvc add data/raw and data/processed
+Add pipeline stage in dvc.yaml for ingestion → cleaning → vol computation, so it's reproducible end-to-end later (dvc repro)
+
+Step 8: Tests (tests/test_features.py, minimal for now)
+
+Test that realized vol computation doesn't use future data (leakage check)
+Test that regime tagging dates align correctly

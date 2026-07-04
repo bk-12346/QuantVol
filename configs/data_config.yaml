@@ -1,1 +1,34 @@
 # tickers, date ranges, frequency
+# configs/data_config.yaml
+
+asset:
+  ticker: "^GSPC"
+  name: "S&P 500 Index"
+
+date_range:
+  start: "2015-01-01"
+  end: null              # null = pull up to latest available date
+
+frequency: "1d"
+
+source: "yfinance"
+
+# output_paths:
+#   raw: "data/raw/gspc_daily.csv"
+#   interim: "data/interim/gspc_cleaned.csv"
+
+output_paths:
+  raw: "data/raw/gspc_daily.csv"
+  interim: "data/interim/gspc_cleaned.csv"
+  processed: "data/processed/gspc_features.csv"
+
+regimes:
+  - name: "2018_q4_selloff"
+    start: "2018-10-01"
+    end: "2018-12-31"
+  - name: "2020_covid_crash"
+    start: "2020-02-15"
+    end: "2020-04-30"
+  - name: "2022_rate_hikes"
+    start: "2022-01-01"
+    end: "2022-10-31"

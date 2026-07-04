@@ -1,1 +1,0 @@
-# computes RV, Parkinson, Garman-Klass

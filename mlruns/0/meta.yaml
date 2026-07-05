@@ -1,0 +1,4 @@
+artifact_location: file:///D:\ML Projects\QuantVol\mlruns/0
+experiment_id: '0'
+lifecycle_stage: active
+name: quantvol-volatility-forecasting

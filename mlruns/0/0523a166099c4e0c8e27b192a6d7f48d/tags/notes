@@ -1,0 +1,1 @@
+Optuna-tuned on single chronological 70/15/15 split; did NOT generalize across full walk-forward period - worse than untuned defaults. Documented limitation of static tuning for non-stationary time series.

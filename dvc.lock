@@ -1,0 +1,55 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: uv run python -m quantvol.data.ingest
+    deps:
+    - path: configs/data_config.yaml
+      hash: md5
+      md5: ae073cc3c522cfc4717cac310e91ad0f
+      size: 751
+    - path: src/quantvol/data/ingest.py
+      hash: md5
+      md5: eea7d7dc6665ea1516ed724eca1ca198
+      size: 1927
+    outs:
+    - path: data/raw/gspc_daily.csv
+      hash: md5
+      md5: c02a9986cb0d7666409a7d0da4f66ca6
+      size: 304173
+  clean:
+    cmd: uv run python -m quantvol.data.clean
+    deps:
+    - path: data/raw/gspc_daily.csv
+      hash: md5
+      md5: c02a9986cb0d7666409a7d0da4f66ca6
+      size: 304173
+    - path: src/quantvol/data/clean.py
+      hash: md5
+      md5: 978fadc001357754b53e2267a5d6a7d8
+      size: 1914
+    outs:
+    - path: data/interim/gspc_cleaned.csv
+      hash: md5
+      md5: dc39a7b5b958a5589219e944cf021592
+      size: 256524
+  features:
+    cmd: uv run python -m quantvol.data.realized_vol && uv run python -m 
+      quantvol.features.regime_labels
+    deps:
+    - path: data/interim/gspc_cleaned.csv
+      hash: md5
+      md5: dc39a7b5b958a5589219e944cf021592
+      size: 256524
+    - path: src/quantvol/data/realized_vol.py
+      hash: md5
+      md5: 955f245138a6d8b847baebc0538accfe
+      size: 5110
+    - path: src/quantvol/features/regime_labels.py
+      hash: md5
+      md5: c2e043e79aa6dbfc0762dc20acc9c231
+      size: 1054
+    outs:
+    - path: data/processed/gspc_features.csv
+      hash: md5
+      md5: 933cda3d7939114b5ff7cd55d6ff1aaa
+      size: 498520

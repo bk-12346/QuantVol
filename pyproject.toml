@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "arch>=8.0.0",
+    "dvc>=3.67.1",
     "lightgbm>=4.6.0",
     "matplotlib>=3.11.0",
     "numpy>=2.5.0",

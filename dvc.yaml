@@ -1,0 +1,25 @@
+stages:
+  ingest:
+    cmd: uv run python -m quantvol.data.ingest
+    deps:
+      - src/quantvol/data/ingest.py
+      - configs/data_config.yaml
+    outs:
+      - data/raw/gspc_daily.csv
+
+  clean:
+    cmd: uv run python -m quantvol.data.clean
+    deps:
+      - src/quantvol/data/clean.py
+      - data/raw/gspc_daily.csv
+    outs:
+      - data/interim/gspc_cleaned.csv
+
+  features:
+    cmd: uv run python -m quantvol.data.realized_vol && uv run python -m quantvol.features.regime_labels
+    deps:
+      - src/quantvol/data/realized_vol.py
+      - src/quantvol/features/regime_labels.py
+      - data/interim/gspc_cleaned.csv
+    outs:
+      - data/processed/gspc_features.csv

@@ -34,6 +34,55 @@ def compute_realized_volatility(df: pd.DataFrame, window: int = 21) -> pd.DataFr
     
     return df
 
+# The concept: Parkinson's estimator uses the daily High/Low range instead of close-to-close returns. Intuitively: if a stock only trades between $100.10 and $100.20 all day, that's a much calmer day than one where it swings between $95 and $105 — even if it happens to close near where it opened. Close-to-close returns miss this intraday information entirely; Parkinson captures it.
+# Formula (per day): Parkinson variance = (1 / (4 * ln(2))) * (ln(High/Low))^2
+
+def compute_parkinson_volatility(df: pd.DataFrame, window: int = 21) -> pd.DataFrame:
+    """
+    Compute rolling Parkinson volatility estimator (annualized).
+
+    Uses the daily High/Low range, which captures intraday movement
+    that close-to-close returns miss. More statistically efficient
+    than close-to-close vol for the same sample size.
+    """
+    df = df.copy()
+    trading_days_per_year = 252
+
+    daily_estimate = (1.0 / (4.0 * np.log(2))) * (np.log(df["High"] / df["Low"])) ** 2
+
+    df[f"parkinson_vol_{window}d"] = np.sqrt(
+        daily_estimate.rolling(window=window, min_periods=window).mean()
+        * trading_days_per_year
+    )
+
+    return df
+
+# The concept: Garman-Klass extends Parkinson by also incorporating Open and Close, not just High/Low. It's considered even more statistically efficient than Parkinson because it uses all four price points available in daily OHLC data, capturing both intraday range and the close-to-open jump.
+# Formula (per day): GK variance = 0.5 * (ln(High/Low))^2 - (2*ln(2) - 1) * (ln(Close/Open))^2
+
+def compute_garman_klass_volatility(df: pd.DataFrame, window: int = 21) -> pd.DataFrame:
+    """
+    Compute rolling Garman-Klass volatility estimator (annualized).
+
+    Extends Parkinson by also using Open/Close, capturing both
+    intraday range and the close-to-open jump. Generally the most
+    statistically efficient of the simple range-based estimators.
+    """
+    df = df.copy()
+    trading_days_per_year = 252
+
+    log_hl = np.log(df["High"] / df["Low"])
+    log_co = np.log(df["Close"] / df["Open"])
+
+    daily_estimate = 0.5 * (log_hl ** 2) - (2 * np.log(2) - 1) * (log_co ** 2)
+
+    df[f"garman_klass_vol_{window}d"] = np.sqrt(
+        daily_estimate.rolling(window=window, min_periods=window).mean()
+        * trading_days_per_year
+    )
+
+    return df
+
 def save_processed_data(df: pd.DataFrame, config: dict) -> None:
     """ Save the processed data (returns + realized vol) to the processed path. """
 
@@ -53,6 +102,8 @@ def main():
 
     df = compute_log_returns(df)
     df = compute_realized_volatility(df, window=21)
+    df = compute_parkinson_volatility(df, window=21)
+    df = compute_garman_klass_volatility(df, window=21)
 
     save_processed_data(df, config)
 

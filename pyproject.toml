@@ -10,6 +10,7 @@ requires-python = ">=3.12,<3.13"
 dependencies = [
     "arch>=8.0.0",
     "dvc>=3.67.1",
+    "fastapi>=0.139.0",
     "lightgbm>=4.6.0",
     "matplotlib>=3.11.0",
     "mlflow>=1.27.0",
@@ -25,6 +26,7 @@ dependencies = [
     "setuptools<81",
     "shap>=0.50.0",
     "statsmodels>=0.14.6",
+    "uvicorn>=0.50.1",
     "xgboost>=3.3.0",
     "yfinance>=1.5.1",
 ]

@@ -1,0 +1,15 @@
+artifact_uri: file:///D:\ML Projects\QuantVol\mlruns/0/10c56c886ec945a8b7dc4bb708541c15/artifacts
+end_time: 1783275682590
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 10c56c886ec945a8b7dc4bb708541c15
+run_uuid: 10c56c886ec945a8b7dc4bb708541c15
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1783275682504
+status: 3
+tags: []
+user_id: Lenovo

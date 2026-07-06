@@ -86,6 +86,27 @@ def main():
 
     print("Logged 4 runs to MLflow. Run 'uv run mlflow ui' to view the dashboard.")
 
+    # --- XGBoost ---
+    log_run(
+        model_name="XGBoost",
+        params={
+            "model_type": "xgboost",
+            "n_estimators": 200,
+            "learning_rate": 0.05,
+            "max_depth": 5,
+            "min_child_weight": 5,
+            "subsample": 0.9,
+            "colsample_bytree": 0.9,
+            "min_train_size": 500,
+            "step_size": 21,
+        },
+        metrics={
+            "rmse": 0.047731,
+            "qlike": 0.045704,
+        },
+        tags={"notes": "Comparable to LightGBM; both ML models underperform HAR-RV on this dataset"},
+    )
+
 
 if __name__ == "__main__":
     main()

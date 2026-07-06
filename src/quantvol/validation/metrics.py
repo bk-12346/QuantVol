@@ -62,7 +62,13 @@ def main():
         target_col="target",
     )
 
-    comparison = pd.DataFrame([har_results, garch_results, lgbm_results])
+    xgb_results = evaluate_predictions(
+        "data/processed/xgboost_predictions.csv",
+        model_name="XGBoost",
+        target_col="target",
+    )
+
+    comparison = pd.DataFrame([har_results, garch_results, lgbm_results, xgb_results])
     print(comparison.to_string(index=False))
 
     output_path = "data/processed/baseline_comparison.csv"

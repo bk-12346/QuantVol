@@ -1,0 +1,1 @@
+Multi-step-ahead forecast within each 21-day window; accuracy degrades with horizon due to mean-reversion in variance equation

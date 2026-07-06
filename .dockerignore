@@ -1,0 +1,11 @@
+.venv/
+.git/
+.dvc/
+mlruns/
+data/
+models/
+__pycache__/
+*.pyc
+.pytest_cache/
+notebooks/.ipynb_checkpoints/
+node_modules/

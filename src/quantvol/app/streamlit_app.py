@@ -1,13 +1,14 @@
 import streamlit as st
 import requests
 from datetime import date
+import os
 
 st.set_page_config(page_title="QuantVol", page_icon="📈", layout="centered")
 
 st.title("QuantVol — Volatility Forecasting")
 st.caption("HAR-RV and XGBoost forecasts for S&P 500 realized volatility, with SHAP-based interpretability.")
 
-API_URL = "http://127.0.0.1:8000/forecast"
+API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000/forecast")
 
 use_latest = st.checkbox("Use latest available data", value=True)
 

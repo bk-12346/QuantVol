@@ -13,6 +13,8 @@ An end-to-end, production-style research system for forecasting S&P 500 realized
 
 **Finding:** HAR-RV substantially outperforms both tree-based ML models, consistent with academic literature — realized volatility's strong autocorrelation is already well-captured by HAR-RV's daily/weekly/monthly structure, leaving limited room for more complex models to add value on this dataset. Optuna hyperparameter tuning for LightGBM was tested but did *not* generalize across the full walk-forward period (documented as a limitation of static train/val tuning for non-stationary time series — see `notebooks/` and MLflow logs).
 
+![System Dashboard](quantvol.png)
+
 ## Why This Project
 
 This project treats volatility forecasting as a real research problem:
